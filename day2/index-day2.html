@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Run Tracker - Day 2</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+
+    .run-list {
+      margin-top: 2rem;
+    }
+
+    .run-card {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .run-card-aside{
+      width: 90%;
+    }
+    .run-card-aside.small{
+      width: 10%;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Run Tracker - Day 2</h1>
+
+  <div id="totalsUi" class="run-card"></div>
+
+  <button id="add-run-btn">
+    Add Random Run
+  </button>
+
+  <div id="run-list" class="run-list"></div>
+
+  <script src="script-day2.js"></script>
+
+</body>
+</html>
