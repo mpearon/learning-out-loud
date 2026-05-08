@@ -38,7 +38,6 @@ function addRun(title, date, distance, duration) {
 		distance: distance,
 		duration: duration
 	};
-
 	runs.push(newRun);
 }
 function addRandomRun(){
@@ -155,8 +154,7 @@ let count = 1;
 addRunBtn.addEventListener( 'click', function(){
 		console.log( `add-run-btn clicked ${ count++ } times` )
 		addRandomRun();
-		renderRuns();
-		renderTotals();
+		renderApp();
 	}
 );
 function renderTotals(){
@@ -222,15 +220,70 @@ function renderRuns(){
 				'click', function() {
 					const id = button.dataset.id;
 					removeRunById( id );
-					renderRuns();
-					renderTotals();
+					renderApp();
 				}
 			)
 		}
 	);
 }
 
-renderRuns();
-renderTotals();
+// Trying to get the return value back to ln 275 to trigger the alert and abort the addRun
+function validateField( input, value, type ){
+	switch( type ){
+		case 'number': 
+			value < 1 
+				? (result = false, input.style.cssText = "background-color: rgba(255,0,0,.2);")
+				: (result = true, input.style.cssText = "background-color: initial");
+			return result;
+		case 'text':
+			value.trim() === '' 
+				? (result = false, input.style.cssText = "background-color: rgba(255,0,0,.2);")
+				: (result = true, input.style.cssText = "background-color: initial");
+			return result;
+		case 'date':
+			value.trim() == ''
+				? (result = false, input.style.cssText = "background-color: rgba(255,0,0,.2);")
+				: (result = true, input.style.cssText = "background-color: initial");
+			return result;
+	}
+}
 
+function renderApp(){
+	renderRuns();
+	renderTotals();
+}
 
+const addRunForm = document.querySelector('#add-run-form')
+
+addRunForm.addEventListener(
+	'submit',
+	function( event ){
+		console.log( 'Form submitted' );
+		event.preventDefault();
+		const formData = new FormData( event.target );
+		const values = Object.fromEntries( formData.entries() );
+		if( 
+			Object.values(values).some( value => value.trim() === '' ) ||
+			Object.values(values).some( value => value.trim() < 0 )
+		){
+			alert( 'Please fill all fields' );
+			//return;
+		}
+		const inputs = document.querySelectorAll('form input');
+		inputs.forEach(
+			input => {
+				validateField( input, input.value, input.type );
+			}
+		);
+		addRun(
+			values.title,
+			new Date( values.date ),
+			parseFloat( values.distance ),
+			parseFloat( values.duration )
+		);
+		addRunForm.reset();
+		renderApp();
+	}
+);
+
+renderApp();
