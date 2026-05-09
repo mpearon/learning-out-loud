@@ -28,10 +28,12 @@
     .run-card-aside.small{
       width: 10%;
     }
-
     button {
       padding: 0.5rem 1rem;
       cursor: pointer;
+    }
+    .invalid{
+      background-color: rgba( 255, 0, 0 , 0.2 );
     }
   </style>
 </head>
@@ -41,6 +43,17 @@
 
   
   <form id="add-run-form">
+    <div>
+      <label for="id">
+        ID
+      </label>
+      <input
+        type="text"
+        id="id"
+        name="id"
+        readonly
+      />
+    </div>
     <div>
       <label for="title">
         Run Title
