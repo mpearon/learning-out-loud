@@ -82,8 +82,35 @@
       </label>
       <input type="number" id="duration" name="duration" />
     </div>
-    <button type="submit">
+    <div>
+      <label for="notes">
+        Notes
+      </label>
+      <textarea
+        id="notes"
+        name="notes">
+      </textarea>
+    </div>
+    <div>
+      <select id="status" name="status">
+        <option value="complete">Complete</option>
+        <option value="registered">Registered</option>
+        <option value="canceled">Canceled</option>
+      </select>
+    </div>
+    <button 
+      id="submit"
+      name="add-run-form_submit"
+      type="submit"
+    >
       Add Run
+    </button>
+    <button
+      id="cancel"
+      name="add-run-form_cancel"
+      type="reset"
+    >
+      Cancel
     </button>
 
   </form>
@@ -97,7 +124,10 @@
 
   <select id="filter-runs">
     <option value="all" selected>All Runs</option>
-    <option value="long">Long Runs (7+ mi)</option>
+    <option value="canceled">Canceled</option>
+    <option value="complete">Complete</option>
+    <option value="registered">Registered</option>
+    <option value="long">Long Runs (13.1+ mi)</option>
     <option value="thisYear">This Year</option>
     <option value="thisMonth">This Month</option>
   </select>

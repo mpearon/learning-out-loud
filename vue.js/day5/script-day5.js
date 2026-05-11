@@ -26,28 +26,28 @@
 
 --- Pause Point 2 ---
 
-[ ] Part 4 - Custom Notes System
-    [ ] Step 1 - Add notes property to runs
-    [ ] Step 2 - Add notes textarea to form
-    [ ] Step 3 - Render notes in run cards
-    [ ] Step 4 - Persist notes through localStorage
-    [ ] Step 5 - Handle optional/empty notes cleanly
+[X] Part 4 - Custom Notes System
+    [X] Step 1 - Add notes property to runs
+    [X] Step 2 - Add notes textarea to form
+    [X] Step 3 - Render notes in run cards
+    [X] Step 4 - Persist notes through localStorage
+    [X] Step 5 - Handle optional/empty notes cleanly
 
-[ ] Part 5 - Form UX Improvements
-    [ ] Step 1 - Add dynamic submit button text
-    [ ] Step 2 - Add “Cancel Edit” button
-    [ ] Step 3 - Clear edit state safely
-    [ ] Step 4 - Prevent accidental duplicate edits
-    [ ] Step 5 - Introduce UI state management concepts
+[X] Part 5 - Form UX Improvements
+    [X] Step 1 - Add dynamic submit button text
+    [X] Step 2 - Add “Cancel Edit” button
+    [X] Step 3 - Clear edit state safely
+    [X] Step 4 - Prevent accidental duplicate edits
+    [X] Step 5 - Introduce UI state management concepts
 
 --- Pause Point 3 ---
 
-[ ] Part 6 - Rendering Architecture Refactor
-    [ ] Step 1 - Extract buildRunCardHtml()
-    [ ] Step 2 - Extract metrics rendering
-    [ ] Step 3 - Separate data processing from rendering
-    [ ] Step 4 - Introduce render pipeline thinking
-    [ ] Step 5 - Prepare for component-based architecture
+[X] Part 6 - Rendering Architecture Refactor
+    [X] Step 1 - Extract buildRunCardHtml()
+    [X] Step 2 - Extract metrics rendering
+    [X] Step 3 - Separate data processing from rendering
+    [X] Step 4 - Introduce render pipeline thinking
+    [X] Step 5 - Prepare for component-based architecture
 
 Today's Stretch Goals
 
@@ -92,7 +92,9 @@ const starterRuns = [
 		type: 'race',
 		date: new Date(2026, 4, 1),
 		distance: 3.1,
-		duration: 30
+		duration: 30,
+		notes: 'Fast 5K',
+		status: 'complete'
 	},
 	{
 		id: '9e2fba33-3027-4a62-88ed-29158a641f87',
@@ -100,7 +102,9 @@ const starterRuns = [
 		type: 'race',
 		date: new Date(2026, 4, 2),
 		distance: 6.2,
-		duration: 60
+		duration: 60,
+		notes: '',
+		status: 'complete'
 	},
 	{
 		id: '235431db-3988-4c57-a3cf-b619dfe2db3c',
@@ -108,7 +112,9 @@ const starterRuns = [
 		type: 'race',
 		date: new Date(2025, 5, 1),
 		distance: 13.1,
-		duration: 120
+		duration: 120,
+		notes: '',
+		status: 'complete'
 	},
 	{
 		id: '5a9c01d0-5b75-4226-a3b0-091a45e7d2f4',
@@ -116,7 +122,9 @@ const starterRuns = [
 		type: 'race',
 		date: new Date(2026, 3, 3),
 		distance: 26.2,
-		duration: 240
+		duration: 240,
+		notes: '',
+		status: 'complete'
 	},
 	{
 		id: '5a9c01d0-5b75-4226-a3b0-091a45e7d2f4',
@@ -124,11 +132,39 @@ const starterRuns = [
 		type: 'training',
 		date: new Date(2026, 5, 3),
 		distance: 5.25,
-		duration: 120
+		duration: 120,
+		notes: '',
+		status: 'complete'
 	},
 ];
+const distanceMap = [
+	{
+		title: '5K',
+		miles:	3.1
+	},
+	{
+		title: '4-Miler',
+		miles: 4
+	},
+	{
+		title: '10K',
+		miles: 6.2
+	},
+	{
+		title: '10-Miler',
+		miles: 10
+	},
+	{
+		title: 'Half Marathon',
+		miles: 13.1
+	},
+	{
+		title: 'Full Marathon',
+		miles: 26.2
+	}
+]
 
-function addRun({ id, title, type, date, distance, duration } = {}) {
+function addRun({ id, title, type, date, distance, duration, notes, status } = {}) {
 	// maybe add constructor for requests lacking an ID?
 	console.log(`Adding run ${title}...`);
 	if( id === '' ){
@@ -138,7 +174,9 @@ function addRun({ id, title, type, date, distance, duration } = {}) {
 			type: type,
 			date: date,
 			distance: distance,
-			duration: duration
+			duration: duration,
+			notes: notes,
+			status: status
 		};
 		runs.push(newRun);
 	}
@@ -149,6 +187,8 @@ function addRun({ id, title, type, date, distance, duration } = {}) {
 		targetRun.date = date
 		targetRun.distance = distance
 		targetRun.duration = duration
+		targetRun.notes = notes
+		targetRun.status = status
 	}
 	saveRuns();
 }
@@ -212,7 +252,9 @@ function addRandomRun() {
 		type: typeArray[Math.floor(Math.random() * typeArray.length)],
 		date: new Date( today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() ),
 		distance: (Math.floor(Math.random() * 10) + 1),
-		duration: (Math.floor(Math.random() * 60) + 15)
+		duration: (Math.floor(Math.random() * 60) + 15),
+		notes: 'RandoRun!',
+		status: 'complete'
 	})
 }
 function clearAllRuns(){
@@ -305,7 +347,7 @@ function calculateAverageDistance() {
 function getLongRuns() {
 	//console.log('Calculating long runs...');
 	return runs.filter(
-		run => run.distance > 7
+		run => run.distance >= 13.1
 	);
 }
 function getLongestDurationRun() {
@@ -361,6 +403,61 @@ function calculatePace(run) {
 	//console.log('Calculating pace...');
 	return run.duration / run.distance;
 }
+function buildRunCardHtml( run ){
+	const html = `
+		<div class="run-card">
+			<div class="run-card-aside">
+				<h3>${ run.title }</h3>
+				<p>
+					Date: ${ formatDate( run.date ) }<br />
+					Type: ${ run.type }<br />
+					Duration: ${ formatNumber( run.duration ) } min<br />
+					Distance: ${ formatNumber( run.distance ) } mi<br />
+					Average Pace: ${ formatNumber( calculatePace( run ) ) } min per mi<br />
+					Status: ${ run.status }<br />
+					${ run.notes ? `Notes: <p>${ run.notes }</p>` : '' }
+				</p>
+				<p>
+					${ isPersonalRecordByProperty( run, 'title' ) ? '<strong> [Course PR] </strong><br />' : '' }
+					${ isPersonalRecordByProperty( run, 'distance' ) ? '<strong> [Distance PR] </strong>' : '' }
+					<!--${ isPersonalRecordByProperty( run, 'pace' ) ? '<strong> [Pace PR] </strong>' : '' }-->
+				<p>
+			</div>
+			<div class="run-card-aside small">
+				<button class="deleteRunButton" data-id="${ run.id }">
+					Delete
+				</button>
+				<br />
+				<button class="editRunButton" data-id="${ run.id }">
+					Edit
+				</button>
+			</div>
+		</div>
+	`
+	return html;
+}
+function buildTotalsHtml( totals ){
+	const html = `
+		<div class="run-card-aside">
+			<h3>Totals</h3>
+			<p>
+				Total races: ${totals.totalCount}<br />
+				Total distance: ${ formatNumber( totals.totalDistance ) }<br />
+				Total duration: ${ formatNumber( totals.totalDuration ) }<br />
+			</p>
+		</div>
+		<div class="run-card-aside">
+			<h3>Metrics</h3>
+			<p>
+				Fastest Pace: ${getFastestPaceRun().title}<br />
+				Slowest Pace: ${getSlowestPaceRun().title}<br />
+				Longest Duration: ${getLongestDurationRun().title}<br />
+				Shortest Duration: ${getShortestDurationRun().title}<br />
+			</p>
+		</div>
+	`
+	return html;
+}
 
 const today = new Date();
 const runListElement = document.querySelector('#run-list')
@@ -379,25 +476,7 @@ function renderTotals() {
 	const totals = getTotals();
 	let html = ''
 	if (totals.totalCount > 0) {
-		html = `
-			<div class="run-card-aside">
-				<h3>Totals</h3>
-				<p>
-					Total races: ${totals.totalCount}<br />
-					Total distance: ${ formatNumber( totals.totalDistance ) }<br />
-					Total duration: ${ formatNumber( totals.totalDuration ) }<br />
-				</p>
-			</div>
-			<div class="run-card-aside">
-				<h3>Metrics</h3>
-				<p>
-					Fastest Pace: ${getFastestPaceRun().title}<br />
-					Slowest Pace: ${getSlowestPaceRun().title}<br />
-					Longest Duration: ${getLongestDurationRun().title}<br />
-					Shortest Duration: ${getShortestDurationRun().title}<br />
-				</p>
-			</div>
-		`
+		html = buildTotalsHtml( totals );
 	}
 	else {
 		html = 'No records are available'
@@ -409,6 +488,14 @@ function compareRuns(a, b, property) {
 		return a.title.localeCompare(b.title);
 	}
 	return a[property] - b[property];
+}
+function setFormFieldValue( { form, field, value } = {}  ){
+	const targetForm = form;
+	if( field === 'all' ){
+		targetForm.reset();
+		return;
+	}
+	targetForm[field.name].textContent = value;
 }
 function renderRuns( { sortProperty = 'date', filterProperty = 'All' } = {} ) {
 	//console.log('Rendering runs...');
@@ -427,34 +514,7 @@ function renderRuns( { sortProperty = 'date', filterProperty = 'All' } = {} ) {
 	else{
 		sortedRuns.forEach(
 			run => {
-				html += `
-					<div class="run-card">
-						<div class="run-card-aside">
-							<h3>${ run.title }</h3>
-							<p>
-								Date: ${ formatDate( run.date ) }<br />
-								Type: ${ run.type }<br />
-								Duration: ${ formatNumber( run.duration ) } min<br />
-								Distance: ${ formatNumber( run.distance ) } mi<br />
-								Average Pace: ${ formatNumber( calculatePace( run ) ) } min per mi<br />
-							</p>
-							<p>
-								${ isPersonalRecordByProperty( run, 'title' ) ? '<strong> [Course PR] </strong><br />' : '' }
-								${ isPersonalRecordByProperty( run, 'distance' ) ? '<strong> [Distance PR] </strong>' : '' }
-								${ isPersonalRecordByProperty( run, 'pace' ) ? '<strong> [Pace PR] </strong>' : '' }
-							<p>
-						</div>
-						<div class="run-card-aside small">
-							<button class="deleteRunButton" data-id="${ run.id }">
-								Delete
-							</button>
-							<br />
-							<button class="editRunButton" data-id="${ run.id }">
-								Edit
-							</button>
-						</div>
-					</div>
-				`
+				html += buildRunCardHtml( run );
 			}
 		);
 	}
@@ -483,6 +543,12 @@ function renderRuns( { sortProperty = 'date', filterProperty = 'All' } = {} ) {
 					const id = button.dataset.id;
 					// populate form with info from run, then edit vs. recreating
 					const form = document.forms['add-run-form'];
+					const submitButton = form.elements.namedItem('add-run-form_submit');
+					setFormFieldValue({
+						form: form,
+						field: submitButton,
+						value: 'Update Run'
+					});
 					const targetRun = runs.find( run => run.id === id )
 					form['id'].value = targetRun.id;
 					form['title'].value = targetRun.title;
@@ -490,6 +556,8 @@ function renderRuns( { sortProperty = 'date', filterProperty = 'All' } = {} ) {
 					form['date'].valueAsDate = new Date( targetRun.date );
 					form['distance'].value = targetRun.distance;
 					form['duration'].value = targetRun.duration;
+					form['notes'].value = targetRun.notes;
+					
 				}
 			)
 		}
@@ -506,6 +574,9 @@ function validateField(input, value, type) {
 			break;
 		case 'date':
 			isValid = value.trim() !== '';
+			break;
+		case 'textarea':
+			isValid = true;
 			break;
 	}
 	isValid
@@ -526,6 +597,22 @@ function renderApp() {
 	renderRuns( renderSettings );
 	renderTotals();
 }
+function getFilteredRunsByProperty( { propertyName, operator, value } = {} ){
+	switch( operator ){
+		case '-eq':
+			return runs.filter( run => run[propertyName] === value );
+		case '-ne':
+			return runs.filter( run => run[propertyName] !== value );
+		case '-gt':
+			return runs.filter( run => run[propertyName] > value );
+		case '-ge':
+			return runs.filter( run => run[propertyName] >= value );
+		case '-lt':
+			return runs.filter( run => run[propertyName] < value );
+		case '-le':
+			return runs.filter( run => run[propertyName] <= value );
+	}
+}
 function getFilteredRuns( filterValue ) {
 	switch(filterValue) {
 		case 'long':
@@ -540,6 +627,21 @@ function getFilteredRuns( filterValue ) {
 }
 
 const addRunForm = document.querySelector('#add-run-form')
+addRunForm.addEventListener(
+	'reset',
+	function( event ){
+		setFormFieldValue({
+			form: event.target,
+			field: 'all'
+		});
+		setFormFieldValue({
+			form: event.target,
+			field: (event.target)['add-run-form_submit'],
+			value: 'Add Run'
+		});
+		return;
+	}
+);
 addRunForm.addEventListener(
 	'submit',
 	function (event) {
@@ -569,9 +671,18 @@ addRunForm.addEventListener(
 			type: values.type,
 			date: new Date( date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() ),
 			distance: parseFloat(values.distance),
-			duration: parseFloat(values.duration)
+			duration: parseFloat(values.duration),
+			notes: values.notes
 		});
-		form.reset();
+		setFormFieldValue({
+			form: form,
+			field: form['add-run-form_submit'],
+			value: 'Add Run'
+		});
+		setFormFieldValue({
+			form: form,
+			field: 'all'
+		});
 		renderApp();
 	}
 );
