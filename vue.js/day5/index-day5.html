@@ -20,6 +20,8 @@
       padding: 1rem;
       margin-bottom: 1rem;
       border-radius: 8px;
+    }
+    .run-card-content{
       display: flex;
       justify-content: flex-end;
     }
@@ -39,6 +41,9 @@
 
     .invalid {
       background-color: rgba(255, 0, 0, 0.2);
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -121,7 +126,14 @@
   <div id="totalsUi" class="run-card"></div>
 
   <br />
-
+  <label for="titleSearch-input">
+    Search by Title
+  </label>
+  <input type="text" id="titleSearch-input">
+  <button type="submit" id="titleSearch-button">
+    Search
+  </button>
+  <br />
   <select id="filter-runs">
     <option value="all" selected>All Runs</option>
     <option value="canceled">Canceled</option>

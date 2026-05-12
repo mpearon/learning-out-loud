@@ -51,10 +51,10 @@
 
 Today's Stretch Goals
 
-[ ] Stretch Goal #1 - Collapsible Run Cards
-[ ] Stretch Goal #2 - Search Runs by Title
-[ ] Stretch Goal #3 - Multi-Filter Support
-[ ] Stretch Goal #4 - Ascending / Descending Sort Toggle
+[X] Stretch Goal #1 - Collapsible Run Cards
+[X] Stretch Goal #2 - Search Runs by Title
+[X] Stretch Goal #3 - Multi-Filter Support
+[X] Stretch Goal #4 - Ascending / Descending Sort Toggle
 [ ] Stretch Goal #5 - Export Runs as JSON
 [ ] Stretch Goal #6 - Import Runs from JSON
 
@@ -136,6 +136,36 @@ const starterRuns = [
 		notes: '',
 		status: 'complete'
 	},
+	{
+		id: 'ec694695-3332-4240-becd-fd3e1218ede7',
+		title: 'Running with the Cows',
+		date: new Date( 2026, 4, 9 ),
+		type: 'race',
+		distance: 13.1,
+		duration: 160,
+		notes: '',
+		status: 'complete'
+	},
+	{
+		id: '822fc9f9-a9ef-4be6-abac-a94f62b8f3a3',
+		title: 'Running with the Cows',
+		date: new Date( 2025, 4, 9 ),
+		type: 'race',
+		distance: 13.1,
+		duration: 180,
+		notes: '',
+		status: 'complete'
+	},
+	{
+		id: '822fc9f9-a9ef-4bc7-abac-a94f62b7f3a7',
+		title: '5K with the Cows',
+		date: new Date( 2025, 4, 9 ),
+		type: 'race',
+		distance: 3.1,
+		duration: 33,
+		notes: '',
+		status: 'complete'
+	}
 ];
 const distanceMap = [
 	{
@@ -163,9 +193,26 @@ const distanceMap = [
 		miles: 26.2
 	}
 ]
+const operatorMap = [
+	{
+		title: 'equals',
+		operator: '-eq'
+	},
+	{
+		title: '>',
+		operator: '-gt'
+	},
+	{
+		title: '<',
+		operator: '-lt'
+	},
+	{
+		title: 'match',
+		operator: '-match'
+	}
+]
 
 function addRun({ id, title, type, date, distance, duration, notes, status } = {}) {
-	// maybe add constructor for requests lacking an ID?
 	console.log(`Adding run ${title}...`);
 	if( id === '' ){
 		const newRun = {
@@ -320,7 +367,12 @@ function formatDate( date ) {
 	`;
 }
 function formatNumber( number ){
-	return number.toFixed(2);
+	if( number !== '' ){
+		return number.toFixed(2);
+	}
+	else{
+		return;
+	}
 }
 function getTotals() {
 	//console.log('Calculating totals...');
@@ -406,31 +458,35 @@ function calculatePace(run) {
 function buildRunCardHtml( run ){
 	const html = `
 		<div class="run-card">
-			<div class="run-card-aside">
+			<div class="run-card-title collapsible">
 				<h3>${ run.title }</h3>
-				<p>
-					Date: ${ formatDate( run.date ) }<br />
-					Type: ${ run.type }<br />
-					Duration: ${ formatNumber( run.duration ) } min<br />
-					Distance: ${ formatNumber( run.distance ) } mi<br />
-					Average Pace: ${ formatNumber( calculatePace( run ) ) } min per mi<br />
-					Status: ${ run.status }<br />
-					${ run.notes ? `Notes: <p>${ run.notes }</p>` : '' }
-				</p>
-				<p>
-					${ isPersonalRecordByProperty( run, 'title' ) ? '<strong> [Course PR] </strong><br />' : '' }
-					${ isPersonalRecordByProperty( run, 'distance' ) ? '<strong> [Distance PR] </strong>' : '' }
-					<!--${ isPersonalRecordByProperty( run, 'pace' ) ? '<strong> [Pace PR] </strong>' : '' }-->
-				<p>
 			</div>
-			<div class="run-card-aside small">
-				<button class="deleteRunButton" data-id="${ run.id }">
-					Delete
-				</button>
-				<br />
-				<button class="editRunButton" data-id="${ run.id }">
-					Edit
-				</button>
+			<div class="run-card-content">
+				<div class="run-card-aside">
+					<p>
+						Date: ${ formatDate( run.date ) }<br />
+						Type: ${ run.type }<br />
+						Duration: ${ formatNumber( run.duration ) } min<br />
+						Distance: ${ formatNumber( run.distance ) } mi<br />
+						Average Pace: ${ formatNumber( calculatePace( run ) ) } min per mi<br />
+						Status: ${ run.status }<br />
+						${ run.notes ? `Notes: <p>${ run.notes }</p>` : '' }
+					</p>
+					<p>
+						${ isPersonalRecordByProperty( run, 'title' ) ? '<strong> [Course PR] </strong><br />' : '' }
+						${ isPersonalRecordByProperty( run, 'distance' ) ? '<strong> [Distance PR] </strong>' : '' }
+						<!--${ isPersonalRecordByProperty( run, 'pace' ) ? '<strong> [Pace PR] </strong>' : '' }-->
+					<p>
+				</div>
+				<div class="run-card-aside small">
+					<button class="deleteRunButton" data-id="${ run.id }">
+						Delete
+					</button>
+					<br />
+					<button class="editRunButton" data-id="${ run.id }">
+						Edit
+					</button>
+				</div>
 			</div>
 		</div>
 	`
@@ -497,10 +553,11 @@ function setFormFieldValue( { form, field, value } = {}  ){
 	}
 	targetForm[field.name].textContent = value;
 }
-function renderRuns( { sortProperty = 'date', filterProperty = 'All' } = {} ) {
+function renderRuns( runs, { sortProperty = 'date', filterProperty = 'All' } = {} ) {
 	//console.log('Rendering runs...');
 	let html = '';
-	const filteredRuns = getFilteredRuns( filterProperty );
+	//const filteredRuns = getFilteredRuns( filterProperty );
+	const filteredRuns = runs;
 	const sortedRuns = filteredRuns.toSorted(
 		(a, b) => compareRuns(a, b, sortProperty)
 	);
@@ -562,6 +619,17 @@ function renderRuns( { sortProperty = 'date', filterProperty = 'All' } = {} ) {
 			)
 		}
 	);
+	const collapseSectionHeader = document.querySelectorAll( '.collapsible' );
+	collapseSectionHeader.forEach(
+		header => {
+			header.addEventListener(
+				'click', function(){
+					var content = header.nextElementSibling;
+					content.classList.toggle( 'hidden' );
+				}
+			);
+		}
+	);
 }
 function validateField(input, value, type) {
 	let isValid = true;
@@ -594,8 +662,55 @@ function renderApp() {
 		settingName: 'sortProperty'
 	});
 	//renderRuns({ filterProperty: filterRunsSelect.value, sortProperty: sortRunsSelect.value });
-	renderRuns( renderSettings );
+	renderRuns( runs, renderSettings );
 	renderTotals();
+}
+function getSortedRuns ( runs, sortObject ){
+	let sortedRuns = runs;
+	sortObject.forEach(
+		sort => {
+			switch( sort.operator ){
+				case 'ascending':
+					sortedRuns = sortedRuns.toSorted( ( a, b ) => compareRuns( a, b, sort.sortProperty ) );
+					break;
+				case 'descending':
+					sortedRuns = sortedRuns.toSorted( ( a, b ) => compareRuns( b, a, sort.sortProperty ) );
+					break;
+			}
+		}
+	);
+	return sortedRuns;
+}
+function getFilteredRunsByMultipleProperties( runs, filterObject ){
+	let filteredRuns = runs;
+	filterObject.forEach(
+		filter => {
+			switch( filter.operator ){
+				case '-eq':
+					filteredRuns = filteredRuns.filter( run => run[filter.propertyName] === filter.value );
+					break;
+				case '-ne':
+					filteredRuns = filteredRuns.filter( run => run[filter.propertyName] !== filter.value );
+					break;
+				case '-gt':
+					filteredRuns = filteredRuns.filter( run => run[filter.propertyName] > filter.value );
+					break;
+				case '-ge':
+					filteredRuns = filteredRuns.filter( run => run[filter.propertyName] >= filter.value );
+					break;
+				case '-lt':
+					filteredRuns = filteredRuns.filter( run => run[filter.propertyName] < filter.value );
+					break;
+				case '-le':
+					filteredRuns = filteredRuns.filter( run => run[filter.propertyName] <= filter.value );
+					break;
+				case '-match':
+					filteredRuns = filteredRuns.filter( run => run[filter.propertyName].toLowerCase().includes( filter.value.toLowerCase() ) );
+					break;
+			}
+		}
+	);
+	return filteredRuns;
 }
 function getFilteredRunsByProperty( { propertyName, operator, value } = {} ){
 	switch( operator ){
@@ -611,6 +726,8 @@ function getFilteredRunsByProperty( { propertyName, operator, value } = {} ){
 			return runs.filter( run => run[propertyName] < value );
 		case '-le':
 			return runs.filter( run => run[propertyName] <= value );
+		case '-match':
+			return runs.filter( run => run[propertyName].toLowerCase().includes( value.toLowerCase() ) );
 	}
 }
 function getFilteredRuns( filterValue ) {
@@ -624,6 +741,25 @@ function getFilteredRuns( filterValue ) {
 		default:
 			return runs;
 	}
+}
+function exportRuns( runs ){
+	const json = JSON.stringify( runs, null, 2 );
+	const blob = new Blob(
+		[json],
+		{ type: "application/json" }
+	);
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement("a");
+	link.href = url;
+	link.download = "runs.json";
+	link.click();
+}
+function importRunsFromJson(){
+	fetch('./imports/runs.json')
+		.then(response => response.json())
+		.then(data => console.log(data))
+		.catch(error => console.error('Error:', error));
+
 }
 
 const addRunForm = document.querySelector('#add-run-form')
@@ -651,7 +787,7 @@ addRunForm.addEventListener(
 		let formIsValid = true;
 		Array.from( form.elements ).forEach(
 			element => {
-				if( element.tagName !== 'INPUT' || element.name === 'id' ){ return; }
+				if( element.tagName !== 'INPUT' || element.name === 'id' || element.name === 'duration' ){ return; }
 				const isValid = validateField(element, element.value, element.type);
 				if (!isValid) {
 					formIsValid = false;
@@ -700,7 +836,7 @@ applyRenderOptionsButton.addEventListener(
 	function(){
 		renderSettings.filterProperty = filterRunsSelect.value
 		renderSettings.sortProperty = sortRunsSelect.value
-		renderRuns( renderSettings );
+		renderRuns( runs, renderSettings );
 		saveSetting({ 
 			settingName: 'filterProperty',
 			settingValue: filterRunsSelect.value 
@@ -709,6 +845,25 @@ applyRenderOptionsButton.addEventListener(
 			settingName: 'sortProperty',
 			settingValue: sortRunsSelect.value
 		});
+	}
+);
+const filterRunsByTitleInput = document.querySelector('#titleSearch-input');
+filterRunsByTitleInput.addEventListener(
+	'keyup',
+	function(){
+		if( this.value.length > 2 ){
+			const filteredRuns = getFilteredRunsByProperty(
+				{
+					propertyName: "title",
+					operator: '-match',
+					value: this.value
+				}
+			)
+			renderRuns( filteredRuns, renderSettings );
+		}
+		else{
+			renderRuns( runs, renderSettings );
+		}
 	}
 );
 
