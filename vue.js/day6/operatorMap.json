@@ -1,0 +1,26 @@
+[
+	{
+		"title": "equals",
+		"operator": "-eq"
+	},
+	{
+		"title": "greater than",
+		"operator": "-gt"
+	},
+	{
+		"title": "greater than or equal to",
+		"operator": "-ge"
+	},
+	{
+		"title": "less than",
+		"operator": "-lt"
+	},
+	{
+		"title": "less than or equal to",
+		"operator": "-le"
+	},
+	{
+		"title": "match",
+		"operator": "-match"
+	}
+]

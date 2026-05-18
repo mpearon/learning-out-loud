@@ -1,0 +1,26 @@
+[
+	{
+		"title": "5K",
+		"miles": 3.1
+	},
+	{
+		"title": "4-Miler",
+		"miles": 4
+	},
+	{
+		"title": "10K",
+		"miles": 6.2
+	},
+	{
+		"title": "10-Miler",
+		"miles": 10
+	},
+	{
+		"title": "Half Marathon",
+		"miles": 13.1
+	},
+	{
+		"title": "Full Marathon",
+		"miles": 26.2
+	}
+]

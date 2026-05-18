@@ -1,0 +1,82 @@
+[
+	{
+		"id": "c162e6e5-6288-4444-b5da-c7ae562ca0f5",
+		"title": "5K for the Cure",
+		"type": "race",
+		"date": "2025-05-01",
+		"distance": 3.1,
+		"duration": 30,
+		"notes": "Fast 5K",
+		"status": "complete"
+	},
+	{
+		"id": "9e2fba33-3027-4a62-88ed-29158a641f87",
+		"title": "Tim \"Tool Man\" Taylor's 10K",
+		"type": "race",
+		"date": "2026-05-02",
+		"distance": 6.2,
+		"duration": 60,
+		"notes": "",
+		"status": "complete"
+	},
+	{
+		"id": "235431db-3988-4c57-a3cf-b619dfe2db3c",
+		"title": "Holly Flax\"s Half Marathon",
+		"type": "race",
+		"date": "2025-05-01",
+		"distance": 13.1,
+		"duration": 120,
+		"notes": "",
+		"status": "complete"
+	},
+	{
+		"id": "5a9c01d0-5b75-4226-a3b0-091a45e7d2f4",
+		"title": "Danny Tanner\"s Full (House) Full Marathon",
+		"type": "race",
+		"date": "2026-03-03",
+		"distance": 26.2,
+		"duration": 240,
+		"notes": "",
+		"status": "complete"
+	},
+	{
+		"id": "5a9c01d0-5b75-4226-a3b0-091a45e7d2f4",
+		"title": "Short Training Run",
+		"type": "training",
+		"date": "2026-05-03",
+		"distance": 5.25,
+		"duration": 120,
+		"notes": "",
+		"status": "complete"
+	},
+	{
+		"id": "ec694695-3332-4240-becd-fd3e1218ede7",
+		"title": "Running with the Cows",
+		"date": "2026-04-09",
+		"type": "race",
+		"distance": 13.1,
+		"duration": 160,
+		"notes": "",
+		"status": "complete"
+	},
+	{
+		"id": "822fc9f9-a9ef-4be6-abac-a94f62b8f3a3",
+		"title": "Running with the Cows",
+		"date": "2025-04-09",
+		"type": "race",
+		"distance": 13.1,
+		"duration": 180,
+		"notes": "",
+		"status": "complete"
+	},
+	{
+		"id": "822fc9f9-a9ef-4be6-abac-a94f62b8f3a3",
+		"title": "5K with the Cows",
+		"date": "2025-04-09",
+		"type": "race",
+		"distance": 3.1,
+		"duration": 33,
+		"notes": "",
+		"status": "complete"
+	}
+]

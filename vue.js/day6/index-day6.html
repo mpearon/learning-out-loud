@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Run Tracker - Day 6</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+
+    .run-list {
+      margin-top: 2rem;
+    }
+
+    .run-card {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+    }
+    .run-card-content{
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .run-card-aside {
+      width: 90%;
+    }
+
+    .run-card-aside.small {
+      width: 10%;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    .invalid {
+      background-color: rgba(255, 0, 0, 0.2);
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Run Tracker - Day 6</h1>
+
+  <form id="add-run-form">
+    <div>
+      <label for="id">
+        ID
+      </label>
+      <input type="text" id="id" name="id" readonly />
+    </div>
+    <div>
+      <label for="title">
+        Run Title
+      </label>
+      <input type="text" id="title" name="title" />
+    </div>
+    <div>
+      <label for="date">
+        Date
+      </label>
+      <input type="date" id="date" name="date" />
+    </div>
+    <select id="type" name="type">
+      <option value="race">Race</option>
+      <option value="training">Training</option>
+    </select>
+    <div>
+      <label for="distance">
+        Distance (mi)
+      </label>
+      <input type="number" id="distance" name="distance" step="0.1" />
+    </div>
+    <div>
+      <label for="duration">
+        Duration (min)
+      </label>
+      <input type="number" id="duration" name="duration" />
+    </div>
+    <div>
+      <label for="notes">
+        Notes
+      </label>
+      <textarea
+        id="notes"
+        name="notes">
+      </textarea>
+    </div>
+    <div>
+      <select id="status" name="status">
+        <option value="complete">Complete</option>
+        <option value="registered">Registered</option>
+        <option value="canceled">Canceled</option>
+      </select>
+    </div>
+    <button 
+      id="submit"
+      name="add-run-form_submit"
+      type="submit"
+    >
+      Add Run
+    </button>
+    <button
+      id="cancel"
+      name="add-run-form_cancel"
+      type="reset"
+    >
+      Cancel
+    </button>
+
+  </form>
+  <button id="add-run-btn">
+    Add Random Run
+  </button>
+  <button id="clear-all-runs">
+    Clear All Runs
+  </button>
+
+  <div id="totalsUi" class="run-card"></div>
+
+  <br />
+  <label for="filterInput-title">
+    Search by Title
+  </label>
+  <input class="filterInput" type="text" id="filterInput-title" />
+  <!--
+  <button type="submit" id="titleSearch-button">
+    Search
+  </button>
+-->
+  <br />
+  <select class="filterInput" id="filterInput-status">
+    <option value="all" selected>All Statuses</option>
+    <option value="complete">Complete</option>
+    <option value="registered">Registered</option>
+    <option value="canceled">Canceled</option>
+  </select>
+  <select class="filterInput" id="filterInput-distance">
+    <option value="all" selected>All Distances</option>
+    <optgroup label="Specified Distance">
+      <option value="3.1">5K</option>
+      <option value="4">4-Miler</option>
+      <option value="6.2">10K</option>
+      <option value="10">10-Miler</option>
+      <option value="13.1">Half Marathon</option>
+      <option value="26.2">Full Marathon</option>
+    </optgroup>
+    <optgroup label="Other">
+      <option value="longRuns" disabled>Long Runs (13.1)+</option>
+      </optgroup>
+    </optgroup>
+  </select>
+  <select class="filterInput" id="filterInput-date">
+    <option value="all" selected>All Time</option>
+    <optgroup label="Current">
+      <option value="thisWeek">This Week</option>
+      <option value="thisMonth">This Month</option>
+      <option value="thisYear">This Year</option>
+    </optgroup>
+    <optgroup label="Past">
+      <option value="lastMonth">Last Month</option>
+      <option value="last6Months">Last 6 Months</option>
+      <option value="lastYear">Last Year</option>
+    </optgroup>
+  </select>
+
+  <select class="filterInput" id="sortInput-propertyName">
+    <option value="date" selected>Sort by Date</option>
+    <option value="title">Sort by Title</option>
+    <option value="distance">Sort by Distance</option>
+    <option value="duration">Sort by Duration</option>
+  </select>
+  <select class="filterInput" id="sortInput-operator">
+    <option value="ascending">Sort Ascending</option>
+    <option value="descending" selected>Sort Descending</option>
+  </select>
+  
+
+  <div id="run-list" class="run-list"></div>
+
+  <script src="script-day6.js"></script>
+
+</body>
+
+</html>
