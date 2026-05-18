@@ -837,7 +837,7 @@ filterInputs.forEach(
 						}
 					}
 					if( objectType === 'sort' ){
-						if( objectType.operator === objectType.value ){
+						if( input.operator === input.propertyName ){
 							appState.sorting[0].operator = value
 						}
 						else{
